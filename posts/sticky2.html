@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.15" />
+    <style>
+      :root {
+        --vp-c-bg: #fff;
+      }
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
+      }
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem('vuepress-color-scheme')
+      const systemDarkMode =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (userMode === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (userMode === 'dark' || systemDarkMode) {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
+    <title>webpack的打包结果分析 | VuePress</title><meta name="description" content="My first VuePress Site">
+    <link rel="preload" href="/blog/assets/style-B-OhtO3j.css" as="style"><link rel="stylesheet" href="/blog/assets/style-B-OhtO3j.css">
+    <link rel="modulepreload" href="/blog/assets/app-BlsqA0do.js"><link rel="modulepreload" href="/blog/assets/sticky2.html-DWQz5qGx.js">
+    <link rel="prefetch" href="/blog/assets/index.html-DV9umNnW.js" as="script"><link rel="prefetch" href="/blog/assets/get-started.html-8UqFXtpb.js" as="script"><link rel="prefetch" href="/blog/assets/archive1.html-CyxK2eXa.js" as="script"><link rel="prefetch" href="/blog/assets/archive2.html-Ch0eUMUo.js" as="script"><link rel="prefetch" href="/blog/assets/article1.html-D7OzWurU.js" as="script"><link rel="prefetch" href="/blog/assets/article10.html-CrEXpO5o.js" as="script"><link rel="prefetch" href="/blog/assets/article11.html-CeW8clSp.js" as="script"><link rel="prefetch" href="/blog/assets/article12.html-U-SXoK9W.js" as="script"><link rel="prefetch" href="/blog/assets/article2.html-K5AnT16-.js" as="script"><link rel="prefetch" href="/blog/assets/article3.html-BRrqvd1Q.js" as="script"><link rel="prefetch" href="/blog/assets/article4.html-D30LWCCO.js" as="script"><link rel="prefetch" href="/blog/assets/article5.html-Dkenl9CV.js" as="script"><link rel="prefetch" href="/blog/assets/article6.html-BwbcYC_X.js" as="script"><link rel="prefetch" href="/blog/assets/article7.html-DoMmPpvr.js" as="script"><link rel="prefetch" href="/blog/assets/article8.html-Ccue3GH7.js" as="script"><link rel="prefetch" href="/blog/assets/article9.html-C2m3STnL.js" as="script"><link rel="prefetch" href="/blog/assets/sticky.html-DIpf3c7r.js" as="script"><link rel="prefetch" href="/blog/assets/404.html-a92-8CvV.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-Sf3Yl2hp.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-BRrAf8Cq.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-BE6VAHtO.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-CCYqJ8B6.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-B4c_xmHQ.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-D6W1GRH4.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-C9YSIX-r.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-DA_bPeYJ.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-XBclGOTk.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-BhxwGHgX.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-g5uWccjS.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-CKUL6WFi.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-7UmB1c9Z.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-Dz57-vOU.js" as="script"><link rel="prefetch" href="/blog/assets/index.html-CXG3M2vq.js" as="script">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="vp-theme-container external-link-icon" vp-container><!--[--><header class="vp-navbar" vp-navbar><div class="vp-toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a class="route-link" href="/blog/"><img class="vp-site-logo" src="https://vuejs.press/images/hero.png" alt="VuePress"><span class="vp-site-name vp-hide-mobile" aria-hidden="true">VuePress</span></a></span><div class="vp-navbar-items-wrapper" style=""><!--[--><!--]--><nav class="vp-navbar-items vp-hide-mobile" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/" aria-label="Home"><!---->Home<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/article/" aria-label="Article"><!---->Article<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/category/" aria-label="Category"><!---->Category<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/tag/" aria-label="Tag"><!---->Tag<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/timeline/" aria-label="Timeline"><!---->Timeline<!----></a></div><!--]--></nav><!--[--><!--]--><button type="button" class="vp-toggle-color-mode-button" title="toggle color mode"><svg class="light-icon" viewbox="0 0 32 32" style=""><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg class="dark-icon" viewbox="0 0 32 32" style="display:none;"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><!----></div></header><!--]--><div class="vp-sidebar-mask"></div><!--[--><aside class="vp-sidebar" vp-sidebar><nav class="vp-navbar-items" aria-label="site navigation"><!--[--><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/" aria-label="Home"><!---->Home<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/article/" aria-label="Article"><!---->Article<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/category/" aria-label="Category"><!---->Category<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/tag/" aria-label="Tag"><!---->Tag<!----></a></div><div class="vp-navbar-item"><a class="route-link auto-link" href="/blog/timeline/" aria-label="Timeline"><!---->Timeline<!----></a></div><!--]--></nav><!--[--><!--]--><ul class="vp-sidebar-items"><!--[--><li><p tabindex="0" class="vp-sidebar-item vp-sidebar-heading">webpack的打包结果分析 <!----></p><!----></li><!--]--></ul><!--[--><!--]--></aside><!--]--><!--[--><main class="vp-page"><!--[--><!--]--><div class="theme-default-content" vp-content><!--[--><!--]--><div><hr><p>date: 2024-09-26 category:</p><ul><li>工程化 tag:</li><li>webpack sticky: 10 lang: zh-CN title: 页面的标题 description: 页面的描述</li></ul><hr><h1 id="webpack的打包结果分析" tabindex="-1"><a class="header-anchor" href="#webpack的打包结果分析"><span>webpack的打包结果分析</span></a></h1><p>main.js单页应用入口文件编译结果简化分析</p><div class="language-javascript line-numbers-mode" data-highlighter="prismjs" data-ext="js" data-title="js"><pre><code><span class="line"><span class="token comment">// imitate webpack build result</span></span>
+<span class="line"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">modules</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">  <span class="token comment">// The module cache</span></span>
+<span class="line">  <span class="token keyword">var</span> installedModules <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">  <span class="token comment">// The require function</span></span>
+<span class="line">  <span class="token comment">// 防止nodejs require冲突用__webpack_require</span></span>
+<span class="line">  <span class="token keyword">function</span> <span class="token function">__webpack_require</span><span class="token punctuation">(</span><span class="token parameter">moduleId</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token comment">// Check if module is in cache</span></span>
+<span class="line">    <span class="token keyword">if</span> <span class="token punctuation">(</span>installedModules<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">      <span class="token keyword">return</span> installedModules<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span><span class="token punctuation">.</span>exports<span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line">    <span class="token comment">// Create a new module (and put it into the cache)</span></span>
+<span class="line">    <span class="token keyword">var</span> module <span class="token operator">=</span> installedModules<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span></span>
+<span class="line">      <span class="token literal-property property">i</span><span class="token operator">:</span> moduleId<span class="token punctuation">,</span></span>
+<span class="line">      <span class="token literal-property property">l</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span></span>
+<span class="line">      <span class="token literal-property property">exports</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></span>
+<span class="line">    <span class="token punctuation">}</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// Execute the module function</span></span>
+<span class="line">    modules<span class="token punctuation">[</span>moduleId<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>module<span class="token punctuation">.</span>exports<span class="token punctuation">,</span> module<span class="token punctuation">,</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">,</span> __webpack_require<span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// Flag the module as loaded</span></span>
+<span class="line">    module<span class="token punctuation">.</span>l <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// Return the exports of the module</span></span>
+<span class="line">    <span class="token keyword">return</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">;</span></span>
+<span class="line">  <span class="token punctuation">}</span></span>
+<span class="line">  <span class="token function">__webpack_require</span><span class="token punctuation">(</span><span class="token string">&quot;./main.js&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">{</span></span>
+<span class="line">  <span class="token string-property property">&quot;./main.js&quot;</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">module<span class="token punctuation">,</span> exports<span class="token punctuation">,</span> __webpack_require</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token comment">// console.log(&#39;main.js&#39;)</span></span>
+<span class="line">    <span class="token comment">// const a = __webpack_require(&#39;./a.js&#39;)</span></span>
+<span class="line">    <span class="token comment">// a.abc()</span></span>
+<span class="line">    <span class="token comment">// console.log(a)</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token comment">// 使用eval执行代码，可以设置在控制台看到的打印的文件名</span></span>
+<span class="line">    <span class="token function">eval</span><span class="token punctuation">(</span><span class="token string">&quot;console.log(&#39;main.js&#39;);\nconst a = __webpack_require(&#39;./a.js&#39;);\na.abc();\nconsole.log(a);\n\n//# sourceURL=webpack:///./src/main.js;&quot;</span><span class="token punctuation">)</span></span>
+<span class="line">  <span class="token punctuation">}</span><span class="token punctuation">,</span></span>
+<span class="line">  <span class="token string-property property">&quot;./a.js&quot;</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">module<span class="token punctuation">,</span> exports<span class="token punctuation">,</span> __webpack_require</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></span>
+<span class="line">    <span class="token comment">// console.log(&#39;a.js&#39;)</span></span>
+<span class="line">    <span class="token comment">// exports.a = &#39;a&#39;</span></span>
+<span class="line">    <span class="token function">eval</span><span class="token punctuation">(</span><span class="token string">&quot;console.log(&#39;a.js&#39;);exports.a = \&quot;a\&quot;//# sourceURL=webpack:///./src/a.js;&quot;</span><span class="token punctuation">)</span></span>
+<span class="line">  <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span><span class="token punctuation">)</span></span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></div><!--[--><!--]--></div><footer class="vp-page-meta"><!----><div class="vp-meta-item git-info"><div class="vp-meta-item last-updated"><span class="meta-item-label">Last Updated: </span><!----></div><div class="vp-meta-item contributors"><span class="meta-item-label">Contributors: </span><span class="meta-item-info"><!--[--><!--[--><span class="contributor" title="email: pan.wang@ushow.media">wangpan</span><!----><!--]--><!--]--></span></div></div></footer><!----><!--[--><!--]--></main><!--]--></div><!--[--><!----><!--]--><!--]--></div>
+    <script type="module" src="/blog/assets/app-BlsqA0do.js" defer></script>
+  </body>
+</html>
