@@ -1,0 +1,16 @@
+import comp from "/Users/wangpan/Test/blog/docs/.vuepress/.temp/pages/tag/webpack/index.html.vue"
+const data = JSON.parse("{\"path\":\"/tag/webpack/\",\"title\":\"Tag webpack\",\"lang\":\"en-US\",\"frontmatter\":{\"title\":\"Tag webpack\",\"sidebar\":false,\"blog\":{\"type\":\"category\",\"name\":\"webpack\",\"key\":\"tag\"},\"layout\":\"Tag\"},\"headers\":[],\"git\":{},\"filePathRelative\":null,\"excerpt\":\"\"}")
+export { comp, data }
+
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
+  if (__VUE_HMR_RUNTIME__.updatePageData) {
+    __VUE_HMR_RUNTIME__.updatePageData(data)
+  }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(({ data }) => {
+    __VUE_HMR_RUNTIME__.updatePageData(data)
+  })
+}
