@@ -1,0 +1,40 @@
+name: Hexo Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 拉取仓库代码
+      - name: ⬇️ Checkout current repo
+        uses: actions/checkout@v3
+
+# 2️⃣ 安装 Node.js
+      - name: 🧱 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+# 3️⃣ 安装 Hexo 依赖
+      - name: 📦 Install dependencies
+        # run: npm install
+        run: npm ci
+
+# 4️⃣ 构建静态文件
+      - name: 🏗 Build project
+        run: npm run build
+
+# 5️⃣ 部署到 gh-pages 分支
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # external_repository: main2018/gallery
+          publish_dir: ./public # 要上传到 gh-pages 分支的目录
+          # personal_token: ${{ secrets.PUSH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }} #  GITHUB_TOKEN是GitHub Actions 运行环境中自动配置的环境变量，只能在当前仓库使用
+          publish_branch: gh-pages  # main或 gh-pages / release
