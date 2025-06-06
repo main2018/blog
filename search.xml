@@ -1,22 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/blog/2025/06/06/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <title>wujie和qiankun</title>
+    <url>/blog/2025/06/06/wujie%20%E5%92%8Cqiankun/</url>
+    <content><![CDATA[<h1 id="Qiankun与Wujie微前端框架的全面对比"><a href="#Qiankun与Wujie微前端框架的全面对比" class="headerlink" title="Qiankun与Wujie微前端框架的全面对比"></a>Qiankun与Wujie微前端框架的全面对比</h1><p>微前端架构已成为现代大型前端项目的主流解决方案，而Qiankun和Wujie作为当前最流行的两种微前端框架，各有其特点和适用场景。本文将深入比较这两种框架的技术架构、核心能力、性能表现以及适用场景，帮助开发者做出合适的技术选型。</p>
+<h2 id="技术架构对比"><a href="#技术架构对比" class="headerlink" title="技术架构对比"></a>技术架构对比</h2><p><strong>Qiankun</strong>基于Single-SPA扩展，采用HTML Entry方式加载子应用，通过路由匹配激活子应用。其沙箱机制包括：</p>
+<ul>
+<li><strong>JS沙箱</strong>：提供快照沙箱(SnapshotSandbox)、代理沙箱(ProxySandbox)等方案，通过代理全局变量实现隔离</li>
+<li><strong>CSS沙箱</strong>：支持strictStyleIsolation(Shadow DOM)和experimentalStyleIsolation(样式前缀)两种方式，但严格隔离可能导致弹窗样式异常</li>
+</ul>
+<p><strong>Wujie</strong>采用WebComponent容器+iframe沙箱的架构：</p>
+<ul>
+<li><strong>JS沙箱</strong>：利用iframe的原生隔离能力，无需通过with语句或代理劫持，性能接近原生</li>
+<li><strong>CSS沙箱</strong>：通过WebComponent的Shadow DOM实现严格隔离，仅可继承部分CSS属性</li>
+<li><strong>路由同步</strong>：劫持iframe的history.pushState，将子应用路由同步到主应用URL参数，支持多应用同时激活且路由状态保活</li>
+</ul>
+<h2 id="核心能力对比"><a href="#核心能力对比" class="headerlink" title="核心能力对比"></a>核心能力对比</h2><table>
+<thead>
+<tr>
+<th>特性&#x2F;维度</th>
+<th><code>qiankun</code></th>
+<th><code>wujie</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心原理</td>
+<td>基于 <code>single-spa</code>，通过 <strong>JS 沙箱 + DOM 沙箱</strong> 实现</td>
+<td>基于 <code>iframe</code> + 主动控制通信、样式隔离等</td>
+</tr>
+<tr>
+<td>子应用加载方式</td>
+<td>JS 方式加载，挂载后注入</td>
+<td>使用 iframe 标签加载，主应用接管 iframe 生命周期</td>
+</tr>
+<tr>
+<td>样式隔离</td>
+<td><code>Shadow DOM</code>、CSS-in-JS、Scoped CSS 等</td>
+<td><code>iframe</code> 天然隔离样式，强隔离</td>
+</tr>
+<tr>
+<td>JS 隔离</td>
+<td>通过 <code>proxy window</code> 模拟 <code>window</code></td>
+<td>iframe 原生隔离 window</td>
+</tr>
+<tr>
+<td>开发调试体验</td>
+<td>类似单页面切换，体验好</td>
+<td>iframe 隔离更强，调试略复杂</td>
+</tr>
+<tr>
+<td>通信方式</td>
+<td>基于 <code>customEvent</code>、<code>props</code></td>
+<td>提供事件&#x2F;状态共享机制，也支持 <code>postMessage</code></td>
+</tr>
+<tr>
+<td>支持沙箱开关</td>
+<td>有（可配置）</td>
+<td>iframe 自带隔离，也可共享 <code>window</code></td>
+</tr>
+<tr>
+<td>子应用保活</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>多应用同时激活</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>适配成本</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>Vite支持</td>
+<td>不支持(需插件改造)</td>
+<td>原生支持</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>较高：JS 加载更快</td>
+<td>稍慢（iframe 加载页面开销稍大）</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td>依赖Proxy，不支持IE11以下</td>
+<td>自动降级至IE9</td>
+</tr>
+</tbody></table>
+<h2 id="适用场景分析"><a href="#适用场景分析" class="headerlink" title="适用场景分析"></a>适用场景分析</h2><p><strong>Qiankun适用场景</strong>：</p>
+<ul>
+<li>需要动态加载多个子应用的中大型项目</li>
+<li>团队技术栈统一(如React&#x2F;Vue)，且能接受较高的子应用适配成本</li>
+<li>需要复杂状态共享和动态路由管理的场景</li>
+</ul>
+<p><strong>Wujie适用场景</strong>：</p>
+<ul>
+<li>快速集成老项目或混合框架(如Vue2+Vue3+React)</li>
+<li>需要同时激活多个子应用或保留子应用状态(如后台管理系统)</li>
+<li>对性能和兼容性要求较高(如兼容IE9)</li>
+<li>使用Vite等现代构建工具的项目</li>
+</ul>
+<h2 id="优缺点总结"><a href="#优缺点总结" class="headerlink" title="优缺点总结"></a>优缺点总结</h2><p><strong>Qiankun优点</strong>：</p>
+<ul>
+<li>成熟度高，社区活跃，生态系统完善</li>
+<li>框架无关性，支持React、Vue、Angular等多种主流前端框架</li>
+<li>灵活性强，可自由选择沙箱隔离和应用加载策略</li>
+</ul>
+<p><strong>Qiankun缺点</strong>：</p>
+<ul>
+<li>复杂度高，配置和使用相对复杂</li>
+<li>性能开销，沙箱隔离机制会带来一定性能损耗</li>
+<li>不支持多应用保活和同时激活</li>
+</ul>
+<p><strong>Wujie优点</strong>：</p>
+<ul>
+<li>接入成本低，子应用几乎无需改造</li>
+<li>原生隔离，通过iframe+WebComponent实现高度隔离</li>
+<li>性能优异，运行速度接近原生</li>
+<li>支持Vite和现代前端工具链</li>
+</ul>
+<p><strong>Wujie缺点</strong>：</p>
+<ul>
+<li>相对较新，社区和生态系统尚在发展中</li>
+<li>iframe可能导致某些UI限制(如全局弹窗)</li>
+<li>文档和支持可能不如Qiankun完善</li>
+</ul>
+<h2 id="选型建议"><a href="#选型建议" class="headerlink" title="选型建议"></a>选型建议</h2><ol>
+<li><p><strong>选择Qiankun</strong>：适合需要动态路由管理和复杂状态共享的大型项目，但需接受较高的改造和维护成本</p>
+</li>
+<li><p><strong>选择Wujie</strong>：适合追求低接入成本、高性能隔离和多应用协作的场景，尤其适合快速迭代和混合技术栈项目</p>
+</li>
+<li><p><strong>考虑兼容性</strong>：如果需要支持IE9等老旧浏览器，Wujie是更好的选择</p>
+</li>
+<li><p><strong>评估团队能力</strong>：对于经验丰富的团队，Qiankun的灵活性可能更有价值；对于快速交付项目，Wujie的低成本优势更明显</p>
+</li>
+</ol>
+<p>最终选择应基于项目具体需求、团队技术栈和长期维护考虑，两种框架各有优劣，没有绝对的好坏之分。</p>
 ]]></content>
+      <categories>
+        <category>技术</category>
+        <category>前端</category>
+        <category>工程化</category>
+      </categories>
+      <tags>
+        <tag>工程化</tag>
+        <tag>架构</tag>
+      </tags>
   </entry>
   <entry>
     <title>函数柯里化</title>
@@ -51,19 +182,6 @@
       </categories>
       <tags>
         <tag>JS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第一篇文章</title>
-    <url>/blog/2025/05/27/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>写点啥呢……</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>回收站</tag>
       </tags>
   </entry>
 </search>
