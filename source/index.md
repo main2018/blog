@@ -17,7 +17,7 @@ subtitle: 记录技术与思考
 <!-- ![我的头像](/images/index.png) -->
 <!-- <img src="/blog/images/index.png" alt="头像" width="120" style="border-radius: 10px;" /> -->
 <div style="display:flex;flex-direction: column;justify-content: center;align-items:center;">
-  {% html "<img src='/images/index.png' width='120' height='120' style='border-radius: 50%;object-fit: cover;margin: initial;'/>" %}
+  {% html "<img src='/images/avatar.jpg' width='120' height='120' style='border-radius: 50%;object-fit: cover;margin: initial;'/>" %}
   <a href="/about" style="margin: 10px 0 0;">👉 联系我</a>
 </div>
 <!-- 👉 [联系我](/about) -->
