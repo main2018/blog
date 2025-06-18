@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"main2018.github.io","root":"/blog/","images":"/blog/images","scheme":"Gemini","darkmode":false,"version":"8.23.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/blog/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js" defer></script>
+
+    <meta name="description" content="你有没有想过，为什么 ChatGPT 能够像人类聊天一样，一个字一个字地”蹦”出来回答你的问题？为什么股票软件能够实时更新价格，而不需要你疯狂刷新页面？ 答案就藏在今天我们要聊的技术里——SSE（Server-Sent Events）! 一、什么是 SSE？通俗比喻了解它我们用一个饭店的比喻来解释： 轮询：你点了菜之后，每隔一会儿就跑去问服务员：“我的菜好了没？”SSE：你点了菜，安心坐着。饭做好">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSE">
+<meta property="og:url" content="https://main2018.github.io/blog/2025/06/18/SSE/index.html">
+<meta property="og:site_name" content="椰子的博客">
+<meta property="og:description" content="你有没有想过，为什么 ChatGPT 能够像人类聊天一样，一个字一个字地”蹦”出来回答你的问题？为什么股票软件能够实时更新价格，而不需要你疯狂刷新页面？ 答案就藏在今天我们要聊的技术里——SSE（Server-Sent Events）! 一、什么是 SSE？通俗比喻了解它我们用一个饭店的比喻来解释： 轮询：你点了菜之后，每隔一会儿就跑去问服务员：“我的菜好了没？”SSE：你点了菜，安心坐着。饭做好">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://main2018.github.io/blog/2025/06/18/SSE/image1.png">
+<meta property="og:image" content="https://main2018.github.io/blog/2025/06/18/SSE/image2.png">
+<meta property="og:image" content="https://main2018.github.io/blog/2025/06/18/SSE/image3.png">
+<meta property="article:published_time" content="2025-06-18T04:01:29.000Z">
+<meta property="article:modified_time" content="2025-06-18T07:49:25.215Z">
+<meta property="article:author" content="Yezi">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://main2018.github.io/blog/2025/06/18/SSE/image1.png">
+
+
+<link rel="canonical" href="https://main2018.github.io/blog/2025/06/18/SSE/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://main2018.github.io/blog/2025/06/18/SSE/","path":"2025/06/18/SSE/","title":"SSE"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SSE | 椰子的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/blog/js/utils.js" defer></script><script src="/blog/js/motion.js" defer></script><script src="/blog/js/sidebar.js" defer></script><script src="/blog/js/next-boot.js" defer></script><script src="/blog/js/bookmark.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/blog/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">椰子的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">椰子笔记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/home" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF-SSE%EF%BC%9F%E9%80%9A%E4%BF%97%E6%AF%94%E5%96%BB%E4%BA%86%E8%A7%A3%E5%AE%83"><span class="nav-number">1.</span> <span class="nav-text">一、什么是 SSE？通俗比喻了解它</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81SSE-%E5%92%8C%E5%85%B6%E4%BB%96%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">2.</span> <span class="nav-text">二、SSE 和其他通信方式的对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81SSE-%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">三、SSE 的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81SSE-%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">4.</span> <span class="nav-text">四、SSE 的实际应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%89%8D%E7%AB%AF-%E5%90%8E%E7%AB%AF%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">五、简单代码示例（前端 + 后端）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">六、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yezi</p>
+  <div class="site-description" itemprop="description">欢迎来到我的博客，我们共同记录，共同进步。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://main2018.github.io/blog/2025/06/18/SSE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Yezi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="椰子的博客">
+      <meta itemprop="description" content="欢迎来到我的博客，我们共同记录，共同进步。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SSE | 椰子的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SSE
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-18 12:01:29 12:01:29" itemprop="dateCreated datePublished" datetime="2025-06-18T12:01:29+08:00">2025-06-18 12:01:29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-18 15:49:25 15:49:25" itemprop="dateModified" datetime="2025-06-18T15:49:25+08:00">2025-06-18 15:49:25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你有没有想过，为什么 ChatGPT 能够像人类聊天一样，一个字一个字地”蹦”出来回答你的问题？为什么股票软件能够实时更新价格，而不需要你疯狂刷新页面？</p>
+<p>答案就藏在今天我们要聊的技术里——SSE（Server-Sent Events）!</p>
+<h1 id="一、什么是-SSE？通俗比喻了解它"><a href="#一、什么是-SSE？通俗比喻了解它" class="headerlink" title="一、什么是 SSE？通俗比喻了解它"></a>一、什么是 SSE？通俗比喻了解它</h1><p>我们用一个饭店的比喻来解释：</p>
+<p>轮询：你点了菜之后，每隔一会儿就跑去问服务员：“我的菜好了没？”<br>SSE：你点了菜，安心坐着。饭做好了，服务员主动来告诉你：“上菜啦！”<br>WebSocket：你和服务员之间装了个对讲机，随时可以互相说话。<br>SSE（Server-Sent Events）是一种基于HTTP的单向通信协议，允许服务器主动向浏览器推送数据。它就像一根从服务器连到浏览器的“数据水管”，打开后服务器可以随时通过这根管子“浇水”（推送数据）。</p>
+<p>核心特点：</p>
+<p>✅ 单向通信：服务器 → 浏览器（像广播电台）<br>✅ 基于HTTP：无需特殊协议<br>✅ 自动重连：网络中断会自动恢复<br>✅ 轻量级：原生浏览器支持，无需额外库<br>⏱️ 低延迟：数据实时到达（毫秒级）</p>
+<h1 id="二、SSE-和其他通信方式的对比"><a href="#二、SSE-和其他通信方式的对比" class="headerlink" title="二、SSE 和其他通信方式的对比"></a>二、SSE 和其他通信方式的对比</h1><p>我们来看一张直观的对比表：</p>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th><code>通信方向</code></th>
+<th>协议</th>
+<th>使用复杂度</th>
+<th>适用场景</th>
+<th>是否支持浏览器原生</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>轮询（HTTP Polling）</td>
+<td>客户端 ➜ 服务端</td>
+<td>HTTP</td>
+<td>简单</td>
+<td>消息不频繁的应用</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>长轮询（HTTP Long Polling）</td>
+<td>客户端 ➜ 服务端</td>
+<td>HTTP</td>
+<td>中等</td>
+<td>低频但对实时性有要求</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>SSE</td>
+<td>服务端 ➜ 客户端</td>
+<td>HTTP</td>
+<td>简单</td>
+<td>消息流实时推送</td>
+<td>✅（除 IE）</td>
+</tr>
+<tr>
+<td>WebSocket</td>
+<td>双向</td>
+<td>自定义协议</td>
+<td>复杂</td>
+<td>聊天、游戏、IoT 等</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<p>🔍 场景选择指南：</p>
+<ul>
+<li>🚨 选SSE：当只需要服务器单向推送时（如新闻推送、监控仪表盘），SSE 是最简单省事的选择。</li>
+<li>🎮 选WebSocket：需要双向实时通信（如在线游戏），那就请 WebSocket 登场。</li>
+<li>⏳ 选轮询&#x2F;长轮询：如果只是偶尔有数据变化，使用轮询也许更简单粗暴。</li>
+<li>💡 精妙比喻：<br>💡 精妙比喻：<ul>
+<li>SSE 像收音机（只能接收信号）</li>
+<li>WebSocket 像电话（双向通话）</li>
+<li>轮询 像不断翻信箱查信</li>
+<li>长轮询 像守在信箱旁等邮差</li>
+</ul>
+</li>
+</ul>
+<h1 id="三、SSE-的原理"><a href="#三、SSE-的原理" class="headerlink" title="三、SSE 的原理"></a>三、SSE 的原理</h1><p>我们用一个图来简单描绘 SSE 的工作过程：<br><img src="/blog/2025/06/18/SSE/image1.png" alt="alt text"><br>📦 关键要素解析<br>HTTP 请求头：客户端发送 Accept: text&#x2F;event-stream 告诉服务器”我要接收事件流”<br>响应格式：服务器返回 Content-Type: text&#x2F;event-stream，然后持续发送数据<br>事件格式：每个事件以 data: 内容\n\n 结束，两个换行符表示事件结束<br>自动重连：连接断开后，浏览器会自动发起新的连接请求</p>
+<h1 id="四、SSE-的实际应用场景"><a href="#四、SSE-的实际应用场景" class="headerlink" title="四、SSE 的实际应用场景"></a>四、SSE 的实际应用场景</h1><p>SSE 已经在很多产品中落地，以下是几个典型场景：</p>
+<ol>
+<li>🤖 ChatGPT 的回答显示机制<br><img src="/blog/2025/06/18/SSE/image2.png" alt="alt text"></li>
+</ol>
+<p>ChatGPT 在回答你问题时，是一句一句“打字式”输出的，没错！就是用了 SSE 来流式传输生成的内容。</p>
+<ol start="2">
+<li>🚨 后台系统消息提醒<br>比如：</li>
+</ol>
+<p>有新的订单；<br>用户提交了新评论；<br>后台工单更新了状态。<br>这些提醒都可以用 SSE 来实时推送。</p>
+<ol start="3">
+<li>📈 实时数据面板<br>股票价格变动<br>区块链交易动态<br>设备温湿度更新<br>只需要后端每隔几秒推送一次，前端就能不断展示最新数据。</li>
+</ol>
+<h1 id="五、简单代码示例（前端-后端）"><a href="#五、简单代码示例（前端-后端）" class="headerlink" title="五、简单代码示例（前端 + 后端）"></a>五、简单代码示例（前端 + 后端）</h1><p>前端代码（浏览器 JS）</p>
+<script>
+  const eventSource = new EventSource('/sse/stream');
+
+  eventSource.onmessage = function(event) {
+    console.log('收到消息：', event.data);
+    // 可更新到页面上
+  };
+
+  eventSource.onerror = function(err) {
+    console.error('连接出错', err);
+    // 可以展示连接断开的提示
+  };
+</script>
+<p>后端代码示例<br>后端（Java，使用 Spring Boot 示例）<br>@RestController<br>publicclass SseController {<br>    privatestaticfinal Map&lt;String, SseEmitter&gt; emitters &#x3D; new ConcurrentHashMap&lt;&gt;();</p>
+<pre><code>// 浏览器连接入口
+@GetMapping(&quot;/sse-connect&quot;)
+public SseEmitter connect(@RequestParam String userId) &#123;
+    SseEmitter emitter = new SseEmitter(30 * 60 * 1000L); // 30分钟超时
+    emitters.put(userId, emitter);
+
+    // 发送欢迎消息
+    try &#123;
+        emitter.send(SseEmitter.event()
+                .name(&quot;welcome&quot;)
+                .data(&quot;🎉 连接成功！欢迎使用 SSE 服务&quot;));
+    &#125; catch (IOException e) &#123;
+        System.err.println(&quot;发送欢迎消息失败: &quot; + e.getMessage());
+    &#125;
+
+    emitter.onCompletion(() -&gt; emitters.remove(userId));
+    emitter.onTimeout(() -&gt; emitters.remove(userId));
+
+    return emitter;
+&#125;
+
+// 模拟推送服务
+@Scheduled(fixedRate = 2000)
+public void pushData() &#123;
+    emitters.forEach((userId, emitter) -&gt; &#123;
+        try &#123;
+            String json = String.format(
+                    &quot;&#123;\&quot;time\&quot;: \&quot;%s\&quot;, \&quot;value\&quot;: %.2f&#125;&quot;,
+                    LocalTime.now(), Math.random() * 100
+            );
+
+            // 构建符合SSE格式的消息
+            emitter.send(SseEmitter.event()
+                    .id(UUID.randomUUID().toString())
+                    .name(&quot;system-metrics&quot;)
+                    .data(json));
+        &#125; catch (IOException e) &#123;
+            emitters.remove(userId);
+        &#125;
+    &#125;);
+&#125;
+</code></pre>
+<p>}<br>curl –location ‘localhost:18500&#x2F;sse-connect?userId&#x3D;1’ <br>–header ‘Key: Accept’ <br>–header ‘Value: text&#x2F;event-stream’<br><img src="/blog/2025/06/18/SSE/image3.png" alt="alt text"></p>
+<h1 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h1><p>SSE 就像一个贴心的”消息推送员”，让服务器能够主动把最新消息送到你面前，而不需要你频繁地去”敲门询问”。它简单易用，特别适合那些需要服务器主动推送数据的场景。🚀</p>
+<p>虽然 SSE 没有 WebSocket 那么”全能”（不能双向通信），但正是这种专一性让它在特定场景下变得格外实用。就像专门的快递员虽然只负责送货，但在送货这件事上做得特别专业一样。</p>
+<p>如果你正在开发一个需要实时推送但通信不需要太复杂的应用，SSE 是一个轻量又可靠的选择，特别适合现代网页、后台系统、数据展示等场景。</p>
+<p>写在最后：Web 开发永远不止一种解决方案。选择最合适的技术，而不是最“酷”的技术，才是工程师的智慧体现 😎</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/%E6%8A%80%E6%9C%AF/" rel="tag"># 技术</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/2025/06/18/URL%E5%9C%B0%E5%9D%80%E6%9C%AB%E5%B0%BE%E5%8A%A0%E4%B8%8D%E5%8A%A0%E2%80%9D-%E2%80%9C%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/" rel="prev" title="URL地址末尾加不加”/“有什么区别">
+                  <i class="fa fa-angle-left"></i> URL地址末尾加不加”/“有什么区别
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/2025/06/18/hexo%E4%B8%AD%E5%9B%BE%E7%89%87%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F/" rel="next" title="hexo中图片的使用方式">
+                  hexo中图片的使用方式 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Yezi</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/main2018" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"main2018","repo":"blog","client_id":"Ov23liSL7dSCbBqwM3qZ","client_secret":"1a47a0aba6069d712db39ceae7d329c21b40fdd6","admin_user":"main2018","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"5738dd20d629fe546bd6a6294318c4f6"}</script>
+<script src="/blog/js/third-party/comments/gitalk.js" defer></script>
+
+</body>
+</html>
